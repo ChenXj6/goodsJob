@@ -2,9 +2,8 @@
 
 //这里是解决跨域接口  '/apis'为代理域名（在vue.config.js里配置跨域）
 // const host=process.env.NODE_ENV=='development'?'http://5016.yesswl.top':`${location.protocol}//${location.host}`;
-const host = 'http://app.likeapp365.com';
-// const host='http://7230.iiio.top';
-// const apiUrl=`${host}/app/index.php?i=4&c=entry&p=userinfo&do=apis&m=sz_yi&op=`;
+const host = 'https://app.goodjobsapp.com'; 
+
 const apiUrl = `${host}/app/index.php?i=4&c=entry&do=apis&m=sz_yi&p=`;
 const base = {
   login: apiUrl + 'userinfo&op=login',
@@ -45,8 +44,16 @@ const base = {
   weblogout: `${host}/app/index.php?i=4&c=entry&p=webinfo&do=apis&m=sz_yi&op=logout`,
   recharge: apiUrl + 'userinfo&op=recharge',
   top_up_way: apiUrl + 'userinfo&op=top_up_way',
+  get_sign: apiUrl + 'userinfo&op=get_sign',
   service: apiUrl + 'userinfo&op=service',
   tasks_grade: apiUrl + 'index&op=tasks_grade',
+  firstMes:apiUrl + 'index&op=announcement',
+  treasure:apiUrl + 'userinfo&op=treasure',
+  paytreasure:apiUrl + 'userinfo&op=paytreasure',
+  paytreasurelog:apiUrl + 'userinfo&op=paytreasurelog',
+  rule:apiUrl + 'index&op=ruleconfig',
+  changePwd:apiUrl + 'userinfo&op=editpwd',
+  persons:apiUrl + 'index&op=maillist'
 }
 
 export default base;

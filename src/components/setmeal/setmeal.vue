@@ -31,11 +31,13 @@
           </p>
         </div>
         <div>
-          <p>{{$t('m.Setmeal.meal3')}}:{{ item.number }}</p>
+          <!-- <p>{{$t('m.Setmeal.meal3')}}:{{ item.number }}</p> -->
           <p>{{$t('m.Setmeal.meal4')}}:{{ item.money }}</p>
           <!-- <el-button class="f-flex f-jc-sb"><span>赠送(每天6条接单任务)</span>   <el-button type="primary">购买</el-button></p> -->
           <p style="margin-bottom: 10px;">
-            <span>{{$t('m.Setmeal.meal5')}}{{ item.give }}{{$t('m.Setmeal.meal6')}}</span>
+            <span>{{$t('m.Setmeal.meal5')}}{{ item.setmealname }}{{$t('m.Setmeal.meal6')}}{{ item.give }}</span>
+            <br>
+            <span>Contains the number of low-level VIP jobs</span>
           </p>
           <el-button type="primary" @click="buy(item.id)">{{$t('m.Setmeal.meal7')}}</el-button>
         </div>
@@ -87,17 +89,18 @@ export default {
       setTimeout(()=>{
          this.$api.Post("pay_setmeal", { id: this.id }).then(res => {
         if (res.status == 0) {
-          this.$toast(res.result.message);
-        }
-
-        if (res.status == 1) {
-    
+          this.$toast(this.$t('m.Setmeal.meal11'));
+        }else if(res.status == 1) {
           this.$toast(this.$t('m.Setmeal.meal9'))
             this.$router.go(0);
+        }else if(res.status == 9){
+          this.$toast(res.result.message)
+          setTimeout(()=>{
+            this.$router.push({path:'recharge'})
+          },1000)
         }
       });
       },500)
-     
     }
   }
 };

@@ -11,8 +11,11 @@ import poster from '../components/index/poster.vue'
 import task from '../components/index/task.vue'
 import mytask from '../components/mytask/mytask.vue'
 import setmeal from '../components/setmeal/setmeal.vue'
+import rule from '../components/rule/rule.vue'
 import personal from '../components/personal/personal.vue'
 import financial from '../components/personal/financial.vue'
+import payRecords from '../components/personal/payRecords.vue'
+import treasure from '../components/personal/treasure.vue'
 import issue from '../components/personal/issue.vue'
 import manage from '../components/personal/manage.vue'
 import issuedetail from '../components/personal/issuedetail.vue'
@@ -23,8 +26,11 @@ import taskdetail from '../components/mytask/taskdetail.vue'
 import weblogin from '../components/pc/weblogin.vue'
 import webindex from '../components/pc/webindex.vue'
 import recharge from '../components/personal/recharge.vue'
+import rchange from '../components/personal/rchange.vue'
 import orderlist from '../components/personal/orderlist.vue'
+import changePwd from '../components/personal/changePwd.vue'
 import copys from '../components/personal/copys.vue'
+
 
 
 Vue.use(VueRouter)
@@ -70,6 +76,14 @@ const routes = [
     },
   },
   {
+    path: '/changePwd',
+    name: 'changePwd',
+    component: changePwd,
+    meta: {
+      islg: true
+    },
+  },
+  {
     path: '/webindex',
     name: 'webindex',
     component: webindex,
@@ -81,6 +95,14 @@ const routes = [
     path: '/recharge',
     name: 'recharge',
     component: recharge,
+    meta: {
+      islg: true
+    },
+  },
+  {
+    path: '/rcharge',
+    name: 'rchange',
+    component: rchange,
     meta: {
       islg: true
     },
@@ -113,6 +135,22 @@ const routes = [
     path: '/financial',
     name: 'financial',
     component: financial,
+    meta: {
+      islg: true
+    },
+  },
+  {
+    path: '/payRecords',
+    name: 'payRecords',
+    component: payRecords,
+    meta: {
+      islg: true
+    },
+  },
+  {
+    path: '/treasure',
+    name: 'treasure',
+    component: treasure,
     meta: {
       islg: true
     },
@@ -205,6 +243,11 @@ const routes = [
     meta: {
       islg: true
     },
+  },
+  {
+    path: '/rule',
+    name: 'rule',
+    component: rule,
   },
   {
     path: '/personal',

@@ -5,7 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    LOADING: false
+    LOADING: false,
+    firstMes:true,
+    receiveVa:'',
+    ifsc:''
   },
   mutations: {
   

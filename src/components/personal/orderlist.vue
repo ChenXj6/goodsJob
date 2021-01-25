@@ -99,26 +99,23 @@
 			},
 			onLoad() {
 					// 异步更新数据
-					// setTimeout 仅做示例，真实场景中一般为 ajax 请求
-					setTimeout(() => {
-						this.page++;
-						this.$api
-							.Post("order", {
-								status: this.type,
-								page: this.page
-							})
-							.then(res => {
-								if (res.status == 1) {
-									this.finanlist = this.finanlist.concat(res.result.list);
-									// 数据全部加载完成
-									if (res.result.list.length < 10) {
-										this.finished = true;
-									}
-								}
-							});
-						// 加载状态结束
-						this.loading = false;
-					}, 1000);
+          this.page++;
+          this.$api
+            .Post("order", {
+              status: this.type,
+              page: this.page
+            })
+            .then(res => {
+              if (res.status == 1) {
+                this.finanlist = this.finanlist.concat(res.result.list);
+                // 数据全部加载完成
+                if (res.result.list.length < 10) {
+                  this.finished = true;
+                }
+              }
+            });
+          // 加载状态结束
+          this.loading = false;
 				}
 		},
 

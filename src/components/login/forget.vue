@@ -1,7 +1,7 @@
 <template>
   <div class="p20">
     <p class="logo">
-      <img :src="logoimg" alt />
+      <img class="logoImg" :src="logoimg" alt />
     </p>
     <div class="memberset1">
       <p>{{$t('m.Retrievepassword.Retrieve1')}}</p>
@@ -11,7 +11,7 @@
         <input
           type="text"
           v-model="zcdata.mobile"
-          maxlength="11"
+          maxlength="20"
           :placeholder="$t('m.Retrievepassword.Retrieve2')"
         />
       </p>
@@ -44,7 +44,8 @@
       <p>
         <el-button type="primary" @click="back">{{$t('m.Retrievepassword.Retrieve9')}}</el-button>
       </p>
-      <p>{{$t('m.Retrievepassword.Retrieve10')}}</p>
+      <p>
+        <a href="http://www.nicejobsapp.com/nicejobsapp.apk">{{$t('m.Retrievepassword.Retrieve10')}}</a></p>
     </div>
   </div>
 </template>
@@ -76,16 +77,16 @@ export default {
       this.$router.push({ name: "login" });
     },
     save() {
-      var isMobile = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
+      // var isMobile = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
 
       if (this.zcdata.mobile == "") {
         this.$toast(this.$t('m.Retrievepassword.Retrieve11'));
         return;
       }
-      if (!isMobile.test(this.zcdata.mobile)) {
-        this.$toast(this.$t('m.Retrievepassword.Retrieve12'));
-        return;
-      }
+      // if (!isMobile.test(this.zcdata.mobile)) {
+      //   this.$toast(this.$t('m.Retrievepassword.Retrieve12'));
+      //   return;
+      // }
       if (this.zcdata.code == "") {
         this.$toast(this.$t('m.Retrievepassword.Retrieve3'));
         return;
@@ -107,15 +108,15 @@ export default {
     },
     //获取验证码
     getcode() {
-      var isMobile = /^1[3|4|5|6|7|8][0-9]{9}$/;
+      // var isMobile = /^1[3|4|5|6|7|8][0-9]{9}$/;
       if (this.zcdata.mobile == "") {
         this.$toast(this.$t('m.Retrievepassword.Retrieve2'));
         return;
       }
-      if (!isMobile.test(this.zcdata.mobile)) {
-        this.$toast(this.$t('m.Retrievepassword.Retrieve12'));
-        return;
-      }
+      // if (!isMobile.test(this.zcdata.mobile)) {
+      //   this.$toast(this.$t('m.Retrievepassword.Retrieve12'));
+      //   return;
+      // }
       this.$api.Post("forgetcode", { mobile: this.zcdata.mobile }).then(res => {
         this.$toast(res.result.message);
         if (res.status == 1) {
@@ -129,11 +130,13 @@ export default {
 
 <style lang="less">
 .logo {
+  position: relative;
   text-align: center;
-  margin: 1rem auto;
+  margin: 20px auto;
 }
-.logo img {
-  width: 100px;
+.logoImg{
+  display: inline-block;
+  width: 270px !important;
 }
 .memberset1 {
   color: #58a1eb;

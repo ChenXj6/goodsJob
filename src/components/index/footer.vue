@@ -4,8 +4,8 @@
       <van-tabbar v-model="active">
         <van-tabbar-item name="index" @click="index" icon="home-o">{{$t('m.footer.publictab1')}}</van-tabbar-item>
         <van-tabbar-item name="mytask" @click="mytask" icon="sign">{{$t('m.footer.publictab2')}}</van-tabbar-item>
+        <van-tabbar-item name="rule" @click="rule" icon="gift-o" >{{$t('m.footer.publictab5')}}</van-tabbar-item>
         <van-tabbar-item name="setmeal" @click="setmeal" icon="apps-o">{{$t('m.footer.publictab3')}}</van-tabbar-item>
-        <!-- <van-tabbar-item name="setting" icon="gift-o" @click="yydb">商城</van-tabbar-item> -->
         <van-tabbar-item name="personal" @click="personal" icon="manager-o">{{$t('m.footer.publictab4')}}</van-tabbar-item>
       </van-tabbar>
     </div>
@@ -25,7 +25,7 @@ export default {
       active(val) {
       
       },
-       $route(to,from){
+      $route(to,from){
           this.active=to.name
       }
     },
@@ -34,8 +34,7 @@ export default {
     },
     methods:{
         mytask(){
-			this.$router.push({ name: "mytask",query:{grade:1} });
-            // this.$router.push({name:'mytask'})
+			      this.$router.push({ name: "mytask",query:{grade:1} });
         },
         setmeal(){
             this.$router.push({name:'setmeal'})
@@ -46,16 +45,10 @@ export default {
         personal(){
             this.$router.push({name:'personal'})
         },
-        yydb(){
-             let islogin=this.getCookie3("openid") || false;
-             if(islogin!=false){
-                location.href=this.host+'/app/index.php?i=4&c=entry&do=index&m=weliam_indiana'
-             }else{
-                this.$router.push({name:'/'})
-             }
+        rule(){
+          this.$router.push({name:'rule'})
         },
-
-           getCookie3(name){
+        getCookie3(name){
         //可以搜索RegExp和match进行学习
         var arr,reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg)) {

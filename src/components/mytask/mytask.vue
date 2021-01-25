@@ -23,7 +23,12 @@
         <div class="van-clearfix"></div>
         <div class="f-flex taskitem" >
           <div>
-           <img :src="item.type==0?dy:ks" alt />
+           <!-- <img :src="item.type==0?dy:ks" alt /> -->
+            <img v-if="item.type == 0" src="../../assets/Tiktok.png" alt="">
+            <img v-else-if="item.type == 1" src="../../assets/Zantine.png" alt="">
+            <img v-else-if="item.type == 2" src="../../assets/whatsapp.png" alt="">
+            <img v-else-if="item.type == 3" src="../../assets/ins.png" alt="">
+            <img v-else src="../../assets/zalo.jpg" alt="">
           </div>
           <div>
             <p>
@@ -141,26 +146,23 @@ export default {
      },
       onLoad() {
       // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        this.page++;
-        this.$api
-          .Post("my_task_list", {
-            page:this.page,
-         status:this.type
-          })
-          .then(res => {
-            if (res.status == 1) {
-              this.tasklist = this.tasklist.concat(res.result.list);
-              // 数据全部加载完成
-              if (res.result.list.length < 10) {
-                this.finished = true;
-              }
+      this.page++;
+      this.$api
+        .Post("my_task_list", {
+          page:this.page,
+        status:this.type
+        })
+        .then(res => {
+          if (res.status == 1) {
+            this.tasklist = this.tasklist.concat(res.result.list);
+            // 数据全部加载完成
+            if (res.result.list.length < 10) {
+              this.finished = true;
             }
-          });
-        // 加载状态结束
-        this.loading = false;
-      }, 1000);
+          }
+        });
+      // 加载状态结束
+      this.loading = false;
     }
   }
 };

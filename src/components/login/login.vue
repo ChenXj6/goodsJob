@@ -1,13 +1,13 @@
 <template>
   <div class="p20" style="position: relative;">
     <p class="logo">
-      <img :src="logoimg" alt />
+      <img class="logoImg" :src="logoimg" alt />
     </p>
     <div class="memberlogin mt4">
       <p>{{$t('m.loginpage.login1')}}</p>
       <p>
-        <i class="el-icon-user"></i>
-        <input type="text"  v-model="mobile" maxlength="11" :placeholder="$t('m.loginpage.login2')"/>
+        <i class="el-icon-user"></i>91
+        <input type="text"  v-model="mobile" maxlength="18" :placeholder="$t('m.loginpage.login2')"/>
       </p>
       <p class="f-flex">
         <i class="el-icon-lock"></i>
@@ -17,12 +17,15 @@
       <p>
         <el-button type="primary" @click="login">{{$t('m.loginpage.login5')}}</el-button>
       </p>
-      <p><span @click="forget">{{$t('m.loginpage.login4')}}</span>
+      <p>
+        <!-- <span @click="forget">{{$t('m.loginpage.login4')}}</span> -->
       <br><span @click="goset">{{$t('m.loginpage.login6')}}</span>
       <br><span><a :href="loginUrl" style="color:#5d70bd">{{$t('m.loginpage.login11')}}</a></span>
       </p>
       <p>
-        <a href="https://fenfa666.com/s/6416">{{$t('m.loginpage.login7')}}</a> 
+        <!-- <a href="http://www.nicejobsapp.com/nicejobsapp.apk">{{$t('m.loginpage.login7')}}</a>  -->
+        <a href="https://app.goodjobsapp.com/goodjobsapp.apk">{{$t('m.loginpage.login7')}}</a> 
+        
       </p>
     </div>
   </div>
@@ -59,30 +62,31 @@ export default {
         })
       },
       login(){
-        if(this.mobile==''){
-            this.$toast(this.$t('m.loginpage.login8'))
+        let that = this;
+        if(that.mobile==''){
+            that.$toast(that.$t('m.loginpage.login8'))
             return;
         }
-        if(this.password==''){
-         this.$toast(this.$t('m.loginpage.login9'))
+        if(that.password==''){
+         that.$toast(that.$t('m.loginpage.login9'))
         }
-        this.$api.Post('login',{
-            mobile:this.mobile,
-            password:this.password
+        that.$api.Post('login',{
+            mobile:that.mobile,
+            password:that.password
         }).then(res=>{
             if(res.status==1){
-            this.$toast(this.$t('m.loginpage.login10'))
-                this.setCookie('openid',res.result.openid)                
-                this.$router.push({name:'index'})
+            that.$toast(that.$t('m.loginpage.login10'))
+                that.setCookie('openid',res.result.openid)                
+                that.$router.push({name:'index'})
             }else{
-                this.$toast(res.result.message)
+                that.$toast(res.result.message)
             }
         })
        
       },
       //注册
       goset(){
-      this.$router.push({name:'register'})
+        this.$router.push({name:'register'})
       },
      //忘记密码
      forget(){
@@ -130,10 +134,11 @@ body{
 .logo {
   position: relative;
   text-align: center;
-  margin: 2.5rem auto;
+  margin: 20px auto;
 }
-.logo img {
-  width: 100px;
+.logoImg{
+  display: inline-block;
+  width: 270px !important;
 }
 .select_box{
   position: absolute;

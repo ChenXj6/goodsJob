@@ -6,8 +6,8 @@
     <div class="p20">
       <div class="releaselist" v-for="(item,index) in newlist" :key="index" @click="detail(item.id)">
         <p>{{item.title}}</p>
-        <p v-html="item.detail">
-        </p>
+        <!-- <p v-html="item.detail">
+        </p> -->
         <!-- <p class="mt2 times">{{item.createtime}}</p> -->
       </div>
     </div>

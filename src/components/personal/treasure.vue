@@ -2,64 +2,44 @@
   <div>
     <div>
       <van-nav-bar
-        :title="$t('m.Capital.detailed1')"
+        :title="$t('m.treasure.treasure1')"
         left-text
         left-arrow
         @click-left="onClickLeft"
       />
-    </div>
-    <div>
-      <div>
-       <div class="source f-flex f-jc-c">
-		   <p>{{$t('m.Capital.detailed2')}}</p>
-		   <div class="van-dropdown-menu van-hairline--top-bottom">
-			   <div role="button" tabindex="0" class="van-dropdown-menu__item"><span class="van-dropdown-menu__title">
-			   <div class="van-ellipsis" @click="tobsea()">{{bvaseTy}}</div></span></div>
-			   <div><div class="van-dropdown-item van-dropdown-item--down" style="z-index: 10; top: 0px; display: none;"><!----></div></div></div></div>
-      </div>
-    </div>
-	
-	<van-popup v-model="showPicker" position="bottom">
-	  <van-picker
-	    show-toolbar
-	    :columns="option1"
-	    @cancel="showPicker = false"
-	    @confirm="onConfirm"
-      :confirm-button-text="$t('m.Personal.Center23')"
-      :cancel-button-text="$t('m.Personal.Center24')"
-	  />
-	</van-popup>
-	
+    </div>	
     <div class="p20" style="padding-top:5px">
       <van-list
         v-model="loading"
         :finished="finished"
         :loading-text="$t('m.mission.mission21')"
-        :finished-text="$t('m.Capital.detailed3')"
+        :finished-text="$t('m.treasure.treasure8')"
         @load="onLoad"
       >
         <div
-          class="financiallist"
-          v-for="(item, index) in finanlist"
+          class="financiallist treasureList"
+          v-for="(item, index) in treasureList"
           :key="index"
         >
-          <p class="f-flex f-jc-sb">
-            <span>{{ item.title }}</span>
-            <span>{{ item.money }}</span>
-          </p>
-          <p class="f-flex f-jc-sb">
-            <span>{{ (item.createtime * 1) | formatDate }}</span>
-            <!-- <span>{{
-              item.status == "1"
-                ? "待审批"
-                : item.status == "2"
-                ? "成功"
-                : "驳回"
-            }}</span> -->
-          </p>
+          <div style="width:100%;height:0;position: relative;">
+            <el-button type="success" round class="payBtn" size="mini" @click="payTreasure(item.id)">{{$t('m.treasure.treasure9')}}</el-button>
+          </div>
+          <div>{{item.financial_name}}</div>
+          <div>{{$t('m.treasure.treasure2')}}INR{{item.min_money}}</div>
+            <div>{{$t('m.treasure.treasure3')}} {{item.daily_rate}}%</div>
+            <div>{{$t('m.treasure.treasure4')}} {{item.pay_day}}{{$t('m.treasure.treasure5')}}</div>
+            <div v-if="lang">{{$t('m.treasure.treasure6')}}{{item.pay_day}}{{$t('m.treasure.treasure7')}}</div>
+            <div v-else>{{$t('m.treasure.treasure6')}}{{$t('m.treasure.treasure7')}}{{item.pay_day}} {{$t('m.treasure.treasure5')}}</div>
+            
+
         </div>
       </van-list>
     </div>
+    <van-dialog v-model="xinx" show-cancel-button @confirm="confirms" :confirmButtonText="$t('m.Personal.Center23')" :cancelButtonText="$t('m.Personal.Center24')">
+      <div class="xinx">
+        <p style="color:#000;"><van-icon name="question" /> {{$t('m.Setmeal.meal8')}}</p>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -68,10 +48,13 @@ export default {
   data() {
     return {
       type: this.$route.query.type||'',
-	  bvaseTy:this.$t('m.Capital.detailed4'),
+	    bvaseTy:this.$t('m.Capital.detailed4'),
       page: 1,
       loading: false,
       finished: false,
+      xinx: false,
+      id:'',
+      lang:localStorage.getItem('language') == 'cn',
 	  showPicker: false,
       option1: [
         { text: this.$t('m.Capital.detailed4'), value: "" },
@@ -81,7 +64,7 @@ export default {
         { text: this.$t('m.Capital.detailed7'), value: 3 },
         { text: this.$t('m.Capital.detailed8'), value: 4 }
       ],
-      finanlist: []
+      treasureList: []
     };
   },
   filters: {
@@ -102,52 +85,48 @@ export default {
     }
   },
   mounted() {
-    this.bill_flow();
-	//this.bvaseTy = this.option1[parseInt(this.$route.query.type)].text;
   },
   methods: {
     onClickLeft() {
       this.$router.go(-1);
     },
-	tobsea(){
-	   this.showPicker = true;
-	   
-	},
-	onConfirm(e){
-		if(e.value.text != this.type){
-			this.type =e.value;
-			this.page = 0;
-			this.bvaseTy = e.text;
-			this.bill_flow();
-			 
-		}
-		this.showPicker = false;
-	},
-
-    //请求明细接口
-    bill_flow() {
-      this.$api
-        .Post("bill_flow", { type: this.type, page: this.page })
-        .then(res => {
-          this.finanlist = res.result.list;
-        });
+    payTreasure(id){
+      this.xinx = true;
+      this.id = id;
     },
-    //分类切换
-    selects(e) {
-      this.page=1
-      this.bill_flow();
+    confirms() {
+      this.xinx=false;
+      setTimeout(()=>{
+         this.$api.Post("paytreasure", { id: this.id }).then(res => {
+        if (res.status == 0) {
+          this.$toast(res.result.message);
+        }
+        if (res.status == 1) {
+          this.$toast(this.$t('m.Setmeal.meal9'))
+            this.$router.go(0);
+        }
+      });
+      },500)
+    },
+    //请求明细接口
+    treasure() {
+      this.$api
+        .Post("treasure", { type: this.type, page: this.page })
+        .then(res => {
+          this.treasureList = res.result.list;
+        });
     },
     onLoad() {
       // 异步更新数据
       this.page++;
       this.$api
-        .Post("bill_flow", {
+        .Post("treasure", {
           type: this.type,
           page: this.page
         })
         .then(res => {
           if (res.status == 1) {
-            this.finanlist = this.finanlist.concat(res.result.list);
+            this.treasureList = this.treasureList.concat(res.result.list);
             // 数据全部加载完成
             if (res.result.list.length < 10) {
               this.finished = true;
@@ -188,5 +167,27 @@ export default {
 }
 .van-dropdown-menu__title {
   font-size: 16px !important;
+}
+.treasureList{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 130px;
+  background-color: #42518d;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.payDays{
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+}
+.payBtn{
+  position:absolute;
+  right: 0;
+  top: 65px;
+  min-width: 80px;
 }
 </style>

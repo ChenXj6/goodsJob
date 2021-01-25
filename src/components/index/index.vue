@@ -95,8 +95,13 @@
              v-for="(item,index) in tasklist"
              :key="index">
           <div>
-            <img :src="item.type==0?dy:ks"
-                 alt />
+            <!-- <img :src="item.type==0?dy:ks"
+                 alt /> -->
+            <img v-if="item.type == 0" src="../../assets/Tiktok.png" alt="">
+            <img v-else-if="item.type == 1" src="../../assets/Zantine.png" alt="">
+            <img v-else-if="item.type == 2" src="../../assets/whatsapp.png" alt="">
+            <img v-else-if="item.type == 3" src="../../assets/ins.png" alt="">
+            <img v-else src="../../assets/zalo.jpg" alt="">
             <span>{{item.grade}}</span>
           </div>
           <div>
@@ -131,6 +136,13 @@
     </van-dialog>
     <div style="width:100%;height:98px"></div>
     <Foot></Foot>
+    <!-- 首次进入展示框 -->
+    <div class="firstMesBox" v-if="$store.state.firstMes">
+      <h1>{{$t('m.firstMes.firstMesTitle')}}</h1>
+      <div class="firstMesCon" v-html="firstMessage.content">{{firstMessage.content}}</div>
+      <img class="firstMesBtn" src="../../assets/close.png" alt="" @click="$store.state.firstMes = false">
+      <img class="firstMesClose" src="../../assets/close2.png" alt="" @click="$store.state.firstMes = false">
+    </div>
   </div>
 </template>
 
@@ -153,7 +165,9 @@ export default {
       dy: require('../../assets/Tiktok.png'),
       ks: require('../../assets/Zantine.png'),
       // host:process.env.NODE_ENV=='development'?'http://7230.iiio.top':`${location.protocol}//${location.host}`
-      host: 'http://app.likeapp365.com',
+      host: 'https://app.goodjobsapp.com', 
+
+      firstMessage:''
     };
   },
   components:{
@@ -165,8 +179,17 @@ export default {
     this.main();
     this.task_list();
     this.tasks_grade();
+    this.getFirstMes();
   },
   methods: {
+    // 获取首次进入
+    getFirstMes(){
+      this.$api.Post("firstMes").then(res => {
+        if (res.status == 1) {
+          this.firstMessage = res.result.result
+        }
+      });
+    },
     //四个板块
     module (e) {
       if (e == 1) {
@@ -181,7 +204,14 @@ export default {
         } else {
           lang = "en"
         }
-        location.href = `${this.host}/app/index.php?i=4&c=entry&method=shares&p=commission&m=sz_yi&do=plugin&lang=` + lang
+        let isLogin = this.getCookie3('openid') || false;
+        if(isLogin == false){
+          let lang = localStorage.getItem('language') == 'yn' ? 'Làm ơn đăng nhập lại lần nữa!' : 'Please log in again!'
+          this.$toast(lang)
+          setTimeout(()=>this.$router.push({path:'/login'}),1000)
+         }else{
+           location.href = `${this.host}/app/index.php?i=4&c=entry&method=shares&p=commission&m=sz_yi&do=plugin&lang=` + lang
+         }
       }
       if (e == 3) {
         this.$router.push({ name: "course" });
@@ -204,7 +234,6 @@ export default {
     },
     main () {
       this.$api.Post("main").then(res => {
-
         if (res.status == 1) {
           this.indexdata = res.result;
         }
@@ -259,38 +288,34 @@ export default {
         if (res.status == 1) {
           this.$toast(this.$t('m.Homepage.home15'))
           setTimeout(() => {
-            this.$router.go(0)
-          }, 500)
-
+            this.$router.push({path:'/mytask',query:{grade:1}})
+          }, 1000)
         }
       })
     },
 
     onLoad () {
       // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        this.page++;
-        this.$api
-          .Post("task_list", {
-            type: "",
-            grade: this.grade,
-            page: this.page,
-            psize: 10
-          })
-          .then(res => {
-            if (res.status == 1) {
-              this.tasklist = this.tasklist.concat(res.result.list);
-              this.money = res.result.money;
-              // 数据全部加载完成
-              if (res.result.list.length < 10) {
-                this.finished = true;
-              }
+      this.page++;
+      this.$api
+        .Post("task_list", {
+          type: "",
+          grade: this.grade,
+          page: this.page,
+          psize: 10
+        })
+        .then(res => {
+          if (res.status == 1) {
+            this.tasklist = this.tasklist.concat(res.result.list);
+            this.money = res.result.money;
+            // 数据全部加载完成
+            if (res.result.list.length < 10) {
+              this.finished = true;
             }
-          });
-        // 加载状态结束
-        this.loading = false;
-      }, 1000);
+          }
+        });
+      // 加载状态结束
+      this.loading = false;
     }
   }
 };
@@ -338,8 +363,6 @@ export default {
       margin-bottom: 10px;
     }
   }
-}
-.taskp {
 }
 .task {
   > p {
@@ -417,5 +440,51 @@ export default {
 .van-ellipsis > .notice-swipe {
   width: 352px;
   height: 0.64rem;
+}
+.firstMesBox{
+  width: 80%;
+  height: 450px;
+  // overflow: auto;
+  min-height: 60%;
+  position: fixed;
+  left: 10%;
+  top:10%;
+  background-image: url(../../assets/firstMesBk.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 0 20px;
+}
+.firstMesBox>h1{
+  text-align: center;
+  margin: 10px 0;
+  height: 30px;
+}
+.firstMesBox>.firstMesCon{
+  height: 400px;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+  ::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+  }
+.firstMesBox>.firstMesBtn{
+  display: block;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  bottom: -100px;
+  transform: translate(-50%,-50%);
+}
+.firstMesBox>.firstMesClose{
+  position: absolute;
+  top:17px;
+  right: 10px;
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 </style>
